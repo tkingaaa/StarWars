@@ -27,16 +27,23 @@ space = turtle.Screen()
 space.setup(width=800, height=600)
 space.bgpic("bg.png")
 space.addshape("sprite.gif")
+space.addshape("meteor2.gif")
 space.tracer(0)
 space.listen()
-space.onkey(fel, "Up")
-space.onkey(le, "Down")
-space.onkey(bal, "Left")
-space.onkey(jobb, "Right")
+space.onkeypress(fel, "Up")
+space.onkeypress(le, "Down")
+space.onkeypress(bal, "Left")
+space.onkeypress(jobb, "Right")
 
 spaceship = turtle.Turtle()
 spaceship.shape("sprite.gif")
 spaceship.penup()
+
+meteor2 = turtle.Turtle()
+meteor2.shape("meteor2.gif")
+meteor2.penup();
+meteor2.setx(450)
+meteor2.sety(random.randint(-300,300))
 
 while True:
 
@@ -52,3 +59,7 @@ while True:
     if spaceship.xcor() < -400:
         spaceship.setx(400)
 
+    meteor2.setx(meteor2.xcor()-10)
+    if meteor2.xcor() < -400:
+        meteor2.setx(450)
+        meteor2.sety(random.randint(-300,300))
