@@ -45,6 +45,17 @@ meteor2.penup();
 meteor2.setx(450)
 meteor2.sety(random.randint(-300,300))
 
+#Számláló
+pen=turtle.Turtle()
+pen.speed(0)
+pen.color("white")
+pen.penup()
+pen.hideturtle()
+pen.goto(0,260)
+pen.write("Találatok: 0",align="center",font=("Courier",18,"bold"))
+#Találatok száma
+score_a=0
+
 while True:
 
     space.update()
@@ -63,3 +74,9 @@ while True:
     if meteor2.xcor() < -400:
         meteor2.setx(450)
         meteor2.sety(random.randint(-300,300))
+    if spaceship.distance(meteor2.xcor(), meteor2.ycor()) < 70:
+        meteor2.setx(random.randint(460,470))
+        meteor2.sety(random.randint(100,280))
+        score_a+=1
+        pen.clear()
+        pen.write("Találatok: {}".format(score_a),align="center",font=("Courier",18,"bold"))
