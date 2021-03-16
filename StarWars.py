@@ -60,6 +60,12 @@ pen.write("Találatok: 0",align="center",font=("Courier",18,"bold"))
 #Találatok száma
 score_a=0
 
+#élet
+szamlalo = 3
+#kijelző
+kijelzo = turtle.Turtle()
+kijelzo.hideturtle()
+
 while True:
 
     space.update()
@@ -85,6 +91,8 @@ while True:
         score_a+=1
         pen.clear()
         pen.write("Találatok: {}".format(score_a),align="center",font=("Courier",18,"bold"))
+        szamlalo -= 1   
+
 
     if meteor.shape() == "meteor2.gif":
         meteor.setx(meteor.xcor()-15)
@@ -94,3 +102,10 @@ while True:
     else:
         meteor.setx(meteor.xcor()-15)
         meteor.sety(meteor.ycor()+15)
+    
+    if szamlalo == 0:
+        space.clear()
+        kijelzo.clear()                                                                  
+        kijelzo.write("Game Over!", align="center", font=("Arial", 36, "bold"))
+
+	# 3 meteor találat és game over
