@@ -28,6 +28,8 @@ space.setup(width=800, height=600)
 space.bgpic("bg.png")
 space.addshape("sprite.gif")
 space.addshape("meteor2.gif")
+space.addshape("meteora1.gif")
+space.addshape("meteora2.gif")
 space.tracer(0)
 space.listen()
 space.onkeypress(fel, "Up")
@@ -39,11 +41,13 @@ spaceship = turtle.Turtle()
 spaceship.shape("sprite.gif")
 spaceship.penup()
 
-meteor2 = turtle.Turtle()
-meteor2.shape("meteor2.gif")
-meteor2.penup();
-meteor2.setx(450)
-meteor2.sety(random.randint(-300,300))
+meteor = turtle.Turtle()
+meteor.penup()
+shapes = ["meteor2.gif","meteora1.gif","meteora2.gif"]
+meteor.shape(random.choice(shapes))
+meteor.setx(400)
+meteor.sety(random.randint(-270,270))
+
 
 #Számláló
 pen=turtle.Turtle()
@@ -70,13 +74,23 @@ while True:
     if spaceship.xcor() < -400:
         spaceship.setx(400)
 
-    meteor2.setx(meteor2.xcor()-10)
-    if meteor2.xcor() < -400:
-        meteor2.setx(450)
-        meteor2.sety(random.randint(-300,300))
-    if spaceship.distance(meteor2.xcor(), meteor2.ycor()) < 70:
-        meteor2.setx(random.randint(460,470))
-        meteor2.sety(random.randint(100,280))
+    if meteor.xcor() < -400 or meteor.ycor() < -300 or meteor.ycor() > 300:
+        meteor.shape(random.choice(shapes))
+        meteor.setx(400)
+        meteor.sety(random.randint(-270,270))
+    if spaceship.distance(meteor.xcor(), meteor.ycor()) < 70:
+        meteor.shape(random.choice(shapes))
+        meteor.setx(400)
+        meteor.sety(random.randint(-270,270))
         score_a+=1
         pen.clear()
         pen.write("Találatok: {}".format(score_a),align="center",font=("Courier",18,"bold"))
+
+    if meteor.shape() == "meteor2.gif":
+        meteor.setx(meteor.xcor()-15)
+    elif meteor.shape() == "meteora1.gif":
+        meteor.setx(meteor.xcor()-15)
+        meteor.sety(meteor.ycor()-15)
+    else:
+        meteor.setx(meteor.xcor()-15)
+        meteor.sety(meteor.ycor()+15)
