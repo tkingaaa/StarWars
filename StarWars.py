@@ -21,6 +21,7 @@ def bal():
     positionX = spaceship.xcor()
     positionX -= 10
     spaceship.setx(positionX)
+
 def fire_bullet():
     global bulletstate
     if bulletstate == "ready":
@@ -29,6 +30,7 @@ def fire_bullet():
         y = spaceship.ycor()
         bullet.setposition(x,y)
         bullet.showturtle()
+
 #Bullet
 bullet = turtle.Turtle()
 bullet.color("yellow")
@@ -44,6 +46,7 @@ bulletspeed = 70
 bulletstate = "ready"
 
 space = turtle.Screen()
+space.title("StarWars")
 space.setup(width=800, height=600)
 space.bgpic("bg.png")
 space.addshape("sprite.gif")
@@ -77,18 +80,25 @@ pen.color("white")
 pen.penup()
 pen.hideturtle()
 pen.goto(0,260)
-pen.write("Találatok: 0",align="center",font=("Courier",18,"bold"))
+pen.write("Találatok: 0",align="center",font=("Ariel",18,"bold"))
 #Találatok száma
 score_a=0
 #Meteor találatok száma
 pen.goto(-300,260)
-pen.write("Meteorok: 0",align="center",font=("Courier",18,"bold"))
+pen.write("Meteorok: 0",align="center",font=("Arial",18,"bold"))
 meteortalalatok=0
 #élet
 szamlalo = 3
 #kijelző
 kijelzo = turtle.Turtle()
 kijelzo.hideturtle()
+
+#Leaderboard
+leaderboard = turtle.Turtle()
+leaderboard.penup()
+leaderboard.hideturtle()
+
+leaderboardMembers = []
 
 while True:
 
@@ -116,9 +126,9 @@ while True:
         meteortalalatok+=1
         pen.goto(0,260)
         pen.clear()
-        pen.write("Találatok: {}".format(score_a),align="center",font=("Courier",18,"bold"))
+        pen.write("Találatok: {}".format(score_a),align="center",font=("Arial",18,"bold"))
         pen.goto(-300,260)
-        pen.write("Meteorok: {}".format(meteortalalatok),align="center",font=("Courier",18,"bold"))
+        pen.write("Meteorok: {}".format(meteortalalatok),align="center",font=("Arial",18,"bold"))
         bullet.setx(500)
         bulletstate="ready"
     if spaceship.distance(meteor.xcor(), meteor.ycor()) < 70:
@@ -128,9 +138,9 @@ while True:
         score_a+=1
         pen.clear()
         pen.goto(0,260)
-        pen.write("Találatok: {}".format(score_a),align="center",font=("Courier",18,"bold"))
+        pen.write("Találatok: {}".format(score_a),align="center",font=("Arial",18,"bold"))
         pen.goto(-300,260)
-        pen.write("Meteorok: {}".format(meteortalalatok),align="center",font=("Courier",18,"bold"))
+        pen.write("Meteorok: {}".format(meteortalalatok),align="center",font=("Arial",18,"bold"))
         szamlalo -= 1   
     if meteor.shape() == "meteor2.gif":
         meteor.setx(meteor.xcor()-15)
@@ -140,11 +150,7 @@ while True:
     else:
         meteor.setx(meteor.xcor()-15)
         meteor.sety(meteor.ycor()+15)
-    
-    if szamlalo == 0:
-        space.clear()
-        kijelzo.clear()                                                                  
-        kijelzo.write("Game Over!", align="center", font=("Arial", 36, "bold"))
+
     if bulletstate == "fire":
         x = bullet.xcor()
         x +=bulletspeed
@@ -154,3 +160,31 @@ while True:
         bulletstate = "ready"
 
 	# 3 meteor találat és game over
+    if szamlalo == 0:
+        space.clear()                                                                
+        kijelzo.write("Game Over!", align="center", font=("Arial", 36, "bold"))
+        time.sleep(1)
+        user = turtle.textinput("Leaderboard details", "Name:")
+        file = open ("leaderboard.txt", "a")
+        file.write("\n")
+        file.write(user)
+        file.write(";")
+        file.write(str(meteortalalatok))
+        file.close()
+        kijelzo.clear()
+        leaderboard.write("LEADERBOARD\n",align="center",font=("Arial",20,"bold"))
+        with open("leaderboard.txt") as fp:
+            for line in fp:
+                piece1 = line.split(';')[0]
+                piece2 = line.split(';')[1]
+                leaderboardMembers.append((str(piece1),int(piece2)))
+        leaderboardMembers.sort(key=lambda a: a[1], reverse=True)
+        count = 0
+        for member in leaderboardMembers:
+            if count < 3:
+                leaderboard.write("{}\t{}".format(member[0],member[1]),align="center",font=("Arial",20,"bold"))
+                leaderboard.goto(leaderboard.xcor(), leaderboard.ycor()-30)
+            else: 
+                break
+            count += 1
+        time.sleep(10)

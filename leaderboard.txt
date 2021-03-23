@@ -1,0 +1,3 @@
+Peti;3
+Barni;4
+Kinga;2
