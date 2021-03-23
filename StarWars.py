@@ -21,7 +21,27 @@ def bal():
     positionX = spaceship.xcor()
     positionX -= 10
     spaceship.setx(positionX)
+def fire_bullet():
+    global bulletstate
+    if bulletstate == "ready":
+        bulletstate = "fire"
+        x = spaceship.xcor()-5
+        y = spaceship.ycor()
+        bullet.setposition(x,y)
+        bullet.showturtle()
+#Bullet
+bullet = turtle.Turtle()
+bullet.color("yellow")
+bullet.shape("triangle")
+bullet.penup()
+bullet.speed(0)
+bullet.setheading(90)
+bullet.shapesize(0.5,0.5)
+bullet.hideturtle()
 
+bulletspeed = 70
+
+bulletstate = "ready"
 
 space = turtle.Screen()
 space.setup(width=800, height=600)
@@ -36,6 +56,7 @@ space.onkeypress(fel, "Up")
 space.onkeypress(le, "Down")
 space.onkeypress(bal, "Left")
 space.onkeypress(jobb, "Right")
+space.onkey(fire_bullet, "space")
 
 spaceship = turtle.Turtle()
 spaceship.shape("sprite.gif")
@@ -59,7 +80,10 @@ pen.goto(0,260)
 pen.write("Találatok: 0",align="center",font=("Courier",18,"bold"))
 #Találatok száma
 score_a=0
-
+#Meteor találatok száma
+pen.goto(-300,260)
+pen.write("Meteorok: 0",align="center",font=("Courier",18,"bold"))
+meteortalalatok=0
 #élet
 szamlalo = 3
 #kijelző
@@ -84,16 +108,30 @@ while True:
         meteor.shape(random.choice(shapes))
         meteor.setx(400)
         meteor.sety(random.randint(-270,270))
+    #Lövedékérzékelés
+    if meteor.distance(bullet.xcor(), bullet.ycor()) < 50:
+        meteor.shape(random.choice(shapes))
+        meteor.setx(400)
+        meteor.sety(random.randint(-270,270))
+        meteortalalatok+=1
+        pen.goto(0,260)
+        pen.clear()
+        pen.write("Találatok: {}".format(score_a),align="center",font=("Courier",18,"bold"))
+        pen.goto(-300,260)
+        pen.write("Meteorok: {}".format(meteortalalatok),align="center",font=("Courier",18,"bold"))
+        bullet.setx(500)
+        bulletstate="ready"
     if spaceship.distance(meteor.xcor(), meteor.ycor()) < 70:
         meteor.shape(random.choice(shapes))
         meteor.setx(400)
         meteor.sety(random.randint(-270,270))
         score_a+=1
         pen.clear()
+        pen.goto(0,260)
         pen.write("Találatok: {}".format(score_a),align="center",font=("Courier",18,"bold"))
+        pen.goto(-300,260)
+        pen.write("Meteorok: {}".format(meteortalalatok),align="center",font=("Courier",18,"bold"))
         szamlalo -= 1   
-
-
     if meteor.shape() == "meteor2.gif":
         meteor.setx(meteor.xcor()-15)
     elif meteor.shape() == "meteora1.gif":
@@ -107,5 +145,12 @@ while True:
         space.clear()
         kijelzo.clear()                                                                  
         kijelzo.write("Game Over!", align="center", font=("Arial", 36, "bold"))
+    if bulletstate == "fire":
+        x = bullet.xcor()
+        x +=bulletspeed
+        bullet.setx(x)
+    if bullet.xcor() > 390:
+        bullet.hideturtle()
+        bulletstate = "ready"
 
 	# 3 meteor találat és game over
